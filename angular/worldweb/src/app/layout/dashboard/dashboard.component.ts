@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { routerTransition } from '../../router.animations';
+import { Http } from '@angular/http';
 
 @Component({
     selector: 'app-dashboard',
@@ -11,7 +12,9 @@ export class DashboardComponent implements OnInit {
     public alerts: Array<any> = [];
     public sliders: Array<any> = [];
 
-    constructor() {
+    http: Http;
+    constructor(http: Http) {
+        this.http = http;
         this.sliders.push({
             imagePath: 'assets/images/slider1.jpg',
             label: 'First slide label',
@@ -44,10 +47,16 @@ export class DashboardComponent implements OnInit {
     }
 
     ngOnInit() {
+        this.http.get('http://localhost:8080/world/findAll', { withCredentials: true }).subscribe(data => this.callback(data));
     }
 
     public closeAlert(alert: any) {
         const index: number = this.alerts.indexOf(alert);
         this.alerts.splice(index, 1);
+    }
+    callback(result: any) {
+      console.log(result);
+      alert(result);
+      document.location.href = 'http://localhost:4200/login';
     }
 }
